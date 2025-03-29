@@ -12,6 +12,45 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <style>
+
+/* Add this CSS to blur everything except the AI Performance Predictor */
+body {
+        position: relative;
+    }
+    
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        pointer-events: none; /* Allows clicking through the blur layer */
+    }
+    
+    /* Exclude the AI Performance Predictor section from the blur */
+    #ai-model,
+    #ai-model * {
+        backdrop-filter: none !important;
+    }
+    
+    /* Make sure the AI section appears above the blur layer */
+    #ai-model {
+        position: relative;
+        z-index: 1001;
+    }
+    
+    /* Keep the modal dialogs above the blur */
+    .modal {
+        z-index: 1002 !important;
+    }
+
+
+
+
+          /*___________________________________________________________________________*/
         /* Add to your existing CSS */
          .is-invalid {
             border-color: #dc3545 !important;
@@ -483,11 +522,12 @@
             <h2 class="section-title text-center mb-5">Free <span class="glow" style="color: var(--neon-pink);">Webinars</span></h2>
             
             <div class="row mb-5">
+                <!-- Current/Featured Webinar -->
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <div class="webinar-card h-100">
                         <div class="webinar-media">
                             <video controls poster="https://via.placeholder.com/600x400/0a0a1a/ffffff?text=Webinar+Preview">
-                                <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
+                                <source src="https://github.com/AshuMItter/aiacademyvideos/blob/7e095d9ab9ee24e733ccca385b6f8b756cda5e00/sample.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </div>
@@ -499,27 +539,69 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Second Featured Webinar -->
                 <div class="col-lg-6">
-                    <div class="upload-area" id="uploadArea">
-                        <div class="upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
+                    <div class="webinar-card h-100">
+                        <div class="webinar-media">
+                            <img src="https://via.placeholder.com/600x400/0a0a1a/ffffff?text=Webinar+Image" alt="Webinar thumbnail" class="img-fluid">
                         </div>
-                        <h4>Upload New Webinar Media</h4>
-                        <p class="text-muted">Drag & drop your webinar video or image here</p>
-                        <input type="file" id="webinarUpload" accept="video/*,image/*" style="display: none;">
-                        <button class="btn btn-outline-light btn-sm mt-3" onclick="document.getElementById('webinarUpload').click()">Select File</button>
-                    </div>
-                    <div id="uploadProgress" class="mt-3" style="display: none;">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        <div class="p-4">
+                            <h4>AI in Education: Transformative Tools</h4>
+                            <p class="text-muted">Monthly on the 2nd Tuesday at 3:00 PM GMT</p>
+                            <p>Discover how AI is revolutionizing learning experiences and educational tools.</p>
+                            <button class="btn btn-neon btn-sm" data-bs-toggle="modal" data-bs-target="#webinarModal">Register for Webinar</button>
                         </div>
-                        <p class="text-center mt-2 mb-0">Uploading: <span id="uploadFileName"></span></p>
                     </div>
                 </div>
             </div>
             
             <div class="row" id="pastWebinars">
                 <!-- Past webinars will be loaded here dynamically -->
+                <div class="col-md-4 mb-4">
+                    <div class="webinar-card past-webinar h-100">
+                        <div class="webinar-media">
+                            <img src="https://via.placeholder.com/400x225/0a0a1a/ffffff?text=Past+Webinar" alt="Past webinar" class="img-fluid">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h5>Getting Started with Machine Learning</h5>
+                            <p class="text-muted small">Recorded: June 15, 2023</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="webinar-card past-webinar h-100">
+                        <div class="webinar-media">
+                            <img src="https://via.placeholder.com/400x225/0a0a1a/ffffff?text=Past+Webinar" alt="Past webinar" class="img-fluid">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h5>Deep Learning Fundamentals</h5>
+                            <p class="text-muted small">Recorded: May 28, 2023</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="webinar-card past-webinar h-100">
+                        <div class="webinar-media">
+                            <img src="https://via.placeholder.com/400x225/0a0a1a/ffffff?text=Past+Webinar" alt="Past webinar" class="img-fluid">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h5>Natural Language Processing Basics</h5>
+                            <p class="text-muted small">Recorded: April 10, 2023</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -535,7 +617,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-4 mb-md-0">
                                 <h4 class="mb-4">Predict Your Study Requirements</h4>
-                                <p>Our AI model analyzes thousands of data points to predict the hours needed to achieve your target score.</p>
+                                <p>Our AI model Anash (v1) analyzes hundreds of data points to predict the hours needed to achieve your target score.</p>
                                 
                                 <div class="mb-3">
                                     <label for="targetScore" class="form-label">Enter Your Target Score (0-100)</label>
@@ -548,10 +630,10 @@
                                 <div class="ai-model-display">
                                     <pre id="aiOutput">{
   "targetScore": 90,
-  "predictedHours": 17.5,
-  "rSquared": 0.001,
-  "regressionEquation": "Hours = -0.017 * Score + 19.1",
-  "dataPointsUsed": 5100
+  "predictedHours": 38.9,
+  "rSquared": 0.103,
+  "regressionEquation": "Hours = 0.412 * Score + 1.8",
+  "dataPointsUsed": 100
 }</pre>
                                 </div>
                             </div>
@@ -828,7 +910,7 @@
                 });
             });
             
-            // AI Model Prediction
+          
           
 // AI Model Prediction
 
@@ -929,42 +1011,42 @@ function validateInput() {
 
     return true; // Input is valid
 }
-            // File upload simulation
-            document.getElementById('webinarUpload').addEventListener('change', function(e) {
-                var file = e.target.files[0];
-                if (!file) return;
+            // // File upload simulation
+            // document.getElementById('webinarUpload').addEventListener('change', function(e) {
+            //     var file = e.target.files[0];
+            //     if (!file) return;
                 
-                var uploadArea = document.getElementById('uploadArea');
-                var uploadProgress = document.getElementById('uploadProgress');
-                var progressBar = uploadProgress.querySelector('.progress-bar');
-                var fileName = document.getElementById('uploadFileName');
+            //     var uploadArea = document.getElementById('uploadArea');
+            //     var uploadProgress = document.getElementById('uploadProgress');
+            //     var progressBar = uploadProgress.querySelector('.progress-bar');
+            //     var fileName = document.getElementById('uploadFileName');
                 
-                fileName.textContent = file.name;
-                uploadArea.style.display = 'none';
-                uploadProgress.style.display = 'block';
+            //     fileName.textContent = file.name;
+            //     uploadArea.style.display = 'none';
+            //     uploadProgress.style.display = 'block';
                 
-                // Simulate upload progress
-                var progress = 0;
-                var interval = setInterval(function() {
-                    progress += Math.random() * 10;
-                    if (progress > 100) progress = 100;
-                    progressBar.style.width = progress + '%';
+            //     // Simulate upload progress
+            //     var progress = 0;
+            //     var interval = setInterval(function() {
+            //         progress += Math.random() * 10;
+            //         if (progress > 100) progress = 100;
+            //         progressBar.style.width = progress + '%';
                     
-                    if (progress === 100) {
-                        clearInterval(interval);
-                        setTimeout(function() {
-                            alert('Webinar media uploaded successfully!');
-                            uploadArea.style.display = 'block';
-                            uploadProgress.style.display = 'none';
-                            progressBar.style.width = '0%';
-                            e.target.value = '';
+            //         if (progress === 100) {
+            //             clearInterval(interval);
+            //             setTimeout(function() {
+            //                 alert('Webinar media uploaded successfully!');
+            //                 uploadArea.style.display = 'block';
+            //                 uploadProgress.style.display = 'none';
+            //                 progressBar.style.width = '0%';
+            //                 e.target.value = '';
                             
-                            // Add to past webinars (simulated)
-                            addPastWebinar(file.name);
-                        }, 500);
-                    }
-                }, 200);
-            });
+            //                 // Add to past webinars (simulated)
+            //                 addPastWebinar(file.name);
+            //             }, 500);
+            //         }
+            //     }, 200);
+            // });
             
             // Contact form submission
             document.getElementById('contactForm').addEventListener('submit', function(e) {
