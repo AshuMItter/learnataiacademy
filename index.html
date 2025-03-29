@@ -831,37 +831,32 @@
             // AI Model Prediction
           
 // AI Model Prediction
+
+// Initialize error display element
+const targetScoreInput = document.getElementById('targetScore');
+let errorDisplay = targetScoreInput.parentNode.querySelector('.error-display');
+if (!errorDisplay) {
+    errorDisplay = document.createElement('div');
+    errorDisplay.className = 'error-display text-danger mt-2';
+    targetScoreInput.parentNode.appendChild(errorDisplay);
+}
+
+// Real-time validation on input change
+targetScoreInput.addEventListener('input', function() {
+    validateInput();
+});
+
+// Click handler for predict button
 document.getElementById('predictBtn').addEventListener('click', async function() {
-    const targetScoreInput = document.getElementById('targetScore');
-    const targetScore = parseInt(targetScoreInput.value);
     const predictBtn = document.getElementById('predictBtn');
     const originalBtnText = predictBtn.innerHTML;
-    const errorDisplay = document.createElement('div');
-    errorDisplay.className = 'text-danger mt-2';
-    targetScoreInput.parentNode.appendChild(errorDisplay);
-
-    // Clear previous errors
-    errorDisplay.textContent = '';
-    targetScoreInput.classList.remove('is-invalid');
-
-    // Validation checks
-    if (isNaN(targetScore)) {
-        errorDisplay.textContent = 'Please enter a valid number';
-        targetScoreInput.classList.add('is-invalid');
+    
+    // Validate input first
+    if (!validateInput()) {
         return;
     }
 
-    if (targetScore <= 0) {
-        errorDisplay.textContent = 'Score cannot be negative or zero';
-        targetScoreInput.classList.add('is-invalid');
-        return;
-    }
-
-    if (targetScore > 100) {
-        errorDisplay.textContent = 'Score cannot be greater than 100';
-        targetScoreInput.classList.add('is-invalid');
-        return;
-    }
+    const targetScore = parseInt(targetScoreInput.value);
 
     // Show loading state
     predictBtn.disabled = true;
@@ -898,7 +893,42 @@ document.getElementById('predictBtn').addEventListener('click', async function()
         predictBtn.disabled = false;
         predictBtn.innerHTML = originalBtnText;
     }
-});           
+});
+
+// Validation function (reused for both input and button click)
+function validateInput() {
+    const value = targetScoreInput.value;
+    const numValue = parseInt(value);
+    
+    // Clear previous errors
+    errorDisplay.textContent = '';
+    targetScoreInput.classList.remove('is-invalid');
+
+    // Validation checks
+    if (value.trim() === '') {
+        return false; // Don't show error for empty field
+    }
+
+    if (isNaN(numValue)) {
+        errorDisplay.textContent = 'Please enter a valid number';
+        targetScoreInput.classList.add('is-invalid');
+        return false;
+    }
+
+    if (numValue <= 0) {
+        errorDisplay.textContent = 'Score cannot be negative or zero';
+        targetScoreInput.classList.add('is-invalid');
+        return false;
+    }
+
+    if (numValue > 100) {
+        errorDisplay.textContent = 'Score cannot be greater than 100';
+        targetScoreInput.classList.add('is-invalid');
+        return false;
+    }
+
+    return true; // Input is valid
+}
             // File upload simulation
             document.getElementById('webinarUpload').addEventListener('change', function(e) {
                 var file = e.target.files[0];
