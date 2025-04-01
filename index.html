@@ -14,6 +14,7 @@
     <style>
         /* Webinar Topic Display Styles */
 /* Webinar Topic Display Styles */
+
 .webinar-topic-display {
     position: relative;
     height: 200px;
@@ -25,7 +26,7 @@
 }
 
 .topic-text-container {
-    position: relative;
+    position: relative;3
     text-align: center;
     width: 100%;
     padding: 20px;
@@ -259,6 +260,10 @@ body {
         backdrop-filter: none !important;
       
     }
+    #predictBtn {
+    position: relative;
+    z-index: 1002; /* Higher than the blur layer */
+}
     
     /* Make sure the AI section appears above the blur layer */
     #webinars,
@@ -772,6 +777,7 @@ body {
                 font-size: 1.3rem;
             }
         }
+       
     </style>
 </head>
 <body>
@@ -1030,7 +1036,6 @@ body {
         </div>
     </section>
     
-    
     <!-- Contact Section -->
     <section id="contact" class="py-5">
         <div class="container">
@@ -1192,7 +1197,7 @@ body {
         // Initialize particles
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
-            
+          //  alert("Hello World top");
             // Set up course registration modal
             var registerModal = document.getElementById('registerModal');
             registerModal.addEventListener('show.bs.modal', function (event) {
@@ -1226,30 +1231,34 @@ body {
                     form.classList.add('was-validated');
                 }
             });
+
+          
             
-            // Webinar registration form submission
-            document.getElementById('submitWebinarRegistration').addEventListener('click', function() {
-                var form = document.getElementById('webinarRegistrationForm');
-                if (form.checkValidity()) {
-                    var name = document.getElementById('webinarName').value;
-                    var email = document.getElementById('webinarEmail').value;
+            // // Webinar registration form submission
+            // document.getElementById('submitWebinarRegistration').addEventListener('click', function() {
+            //     var form = document.getElementById('webinarRegistrationForm');
+            //     if (form.checkValidity()) {
+            //         var name = document.getElementById('webinarName').value;
+            //         var email = document.getElementById('webinarEmail').value;
                     
-                    // In a real application, you would send this data to your server
-                    console.log('Webinar Registration:', {
-                        name: name,
-                        email: email,
-                        date: document.getElementById('webinarDate').value,
-                        updates: document.getElementById('webinarUpdates').checked
-                    });
+            //         // In a real application, you would send this data to your server
+            //         console.log('Webinar Registration:', {
+            //             name: name,
+            //             email: email,
+            //             date: document.getElementById('webinarDate').value,
+            //             updates: document.getElementById('webinarUpdates').checked
+            //         });
                     
-                    alert('Thank you, ' + name + '! Your webinar registration has been received. We will send details to ' + email);
-                    var modal = bootstrap.Modal.getInstance(document.getElementById('webinarModal'));
-                    modal.hide();
-                } else {
-                    form.classList.add('was-validated');
-                }
-            });
-            
+            //         alert('Thank you, ' + name + '! Your webinar registration has been received. We will send details to ' + email);
+            //         var modal = bootstrap.Modal.getInstance(document.getElementById('webinarModal'));
+            //         modal.hide();
+            //     } else {
+            //         form.classList.add('was-validated');
+            //     }
+            // });
+
+           // alert("Hello World LowerAbove");   
+            // ________________________________________________________________________________
             // Syllabus download
             document.querySelectorAll('.download-syllabus').forEach(button => {
                 button.addEventListener('click', function(e) {
@@ -1260,7 +1269,7 @@ body {
                 });
             });
             
-          
+           
           
 // AI Model Prediction
 
@@ -1285,6 +1294,10 @@ const btnText = predictBtn.querySelector('.btn-text');
 targetScoreInput.addEventListener('input', function() {
     validateInput();
 });
+
+
+
+
 
 // Click handler for predict button
 predictBtn.addEventListener('click', async function() {
@@ -1326,8 +1339,8 @@ predictBtn.addEventListener('click', async function() {
         loadingSpinner.classList.add('d-none');
         document.querySelector('.ai-model-display').style.animation = '';
     }
-});
-
+})
+//alert("Hello World");
 function updateDisplay(targetScore, data) {
     // Update main metrics with animation
     displayScore.textContent = targetScore;
@@ -1587,6 +1600,10 @@ function validateInput() {
             // Insert at the beginning
             container.insertBefore(col, container.firstChild);
         }
+
+
+
+
         // ___________Webinar ___________________________________
         // Global variable to store current webinar for registration
         let currentWebinar = null;
