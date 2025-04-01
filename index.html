@@ -14,6 +14,166 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
+/* New AI Animation Styles */
+    
+    /* Floating AI Orbs */
+    .ai-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(30px);
+        opacity: 0.7;
+        animation: floatOrb 15s infinite ease-in-out;
+    }
+    
+    @keyframes floatOrb {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(50px, 30px); }
+        50% { transform: translate(20px, 60px); }
+        75% { transform: translate(-30px, 40px); }
+    }
+    
+    /* Neural Network Connections */
+    .neural-network {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    .neural-line {
+        position: absolute;
+        background: linear-gradient(90deg, rgba(0,255,252,0.1), rgba(188,19,254,0.3), rgba(0,255,252,0.1));
+        height: 1px;
+        transform-origin: left center;
+        animation: neuralPulse 3s infinite ease-in-out;
+    }
+    
+    @keyframes neuralPulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    
+    /* Holographic Typing Effect */
+    .holographic-text {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .holographic-text::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(transparent 0%, rgba(0,255,252,0.2) 50%, transparent 100%);
+        animation: hologramScan 4s infinite linear;
+    }
+    
+    @keyframes hologramScan {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+    }
+    
+    /* Data Stream Visualization */
+    .data-stream {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+    }
+    
+    .data-bit {
+        position: absolute;
+        color: rgba(0,255,252,0.7);
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        animation: dataFall linear infinite;
+        text-shadow: 0 0 5px rgba(0,255,252,0.5);
+    }
+    
+    @keyframes dataFall {
+        to { transform: translateY(100vh); }
+    }
+    
+    /* AI Brain Visualization */
+    .ai-brain {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+    }
+    
+    .brain-node {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
+        animation: brainPulse 2s infinite ease-in-out;
+    }
+    
+    .brain-connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+        transform-origin: left center;
+        animation: connectionPulse 3s infinite ease-in-out;
+    }
+    
+    @keyframes brainPulse {
+        0%, 100% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.3); opacity: 1; }
+    }
+    
+    @keyframes connectionPulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    
+    /* Enhanced Interactive Hover Effects */
+    .interactive-card {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .interactive-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0,255,252,0.1) 0%, transparent 70%);
+        transform: translate(var(--mouse-x), var(--mouse-y));
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    .interactive-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,255,252,0.3);
+    }
+    
+    /* Binary Rain Effect */
+    .binary-rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.1;
+    }
+
+
         /* Webinar Topic Display Styles */
 /* Webinar Topic Display Styles */
 
@@ -237,7 +397,7 @@
         font-weight: 600;
     }
 
-/*Add this CSS to blur everything except the AI Performance Predictor*/
+/*Add this CSS to blur everything except the AI Performance Predictor  */
 body {
         position: relative;
     }
@@ -251,17 +411,19 @@ body {
         height: 100%;
         backdrop-filter: blur(5px);
         z-index: 1000;
-        pointer-events: none; /* Allows clicking through the blur layer */
-    }
+        pointer-events: none;  */ Allows clicking through the blur layer &/
+    } 
     
     /* Exclude the AI Performance Predictor section from the blur */
+
     #ai-model,
     #webinars,
     #webinars *,
     #ai-model * {
         backdrop-filter: none !important;
       
-    }
+    }   
+
     /*#predictBtn {
     position: relative;
     z-index: 1002; /* Higher than the blur layer} */
@@ -1983,5 +2145,234 @@ function handleRegistration(e) {
             }
         });
         </script>
+        <script>
+            // Create floating AI orbs
+            function createFloatingOrbs() {
+                const colors = ['rgba(0, 255, 252, 0.3)', 'rgba(188, 19, 254, 0.3)', 'rgba(255, 0, 255, 0.3)'];
+                const container = document.querySelector('.hero-section');
+                
+                for (let i = 0; i < 5; i++) {
+                    const orb = document.createElement('div');
+                    orb.className = 'ai-orb';
+                    orb.style.width = `${Math.random() * 200 + 100}px`;
+                    orb.style.height = orb.style.width;
+                    orb.style.background = `radial-gradient(circle, ${colors[i % colors.length]}, transparent 70%)`;
+                    orb.style.left = `${Math.random() * 80 + 10}%`;
+                    orb.style.top = `${Math.random() * 80 + 10}%`;
+                    orb.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                    orb.style.animationDelay = `${Math.random() * 5}s`;
+                    container.appendChild(orb);
+                }
+            }
+            
+            // Create neural network connections
+            function createNeuralNetwork() {
+                const container = document.getElementById('neuralNetwork');
+                const nodeCount = 15;
+                const nodes = [];
+                
+                // Create nodes
+                for (let i = 0; i < nodeCount; i++) {
+                    nodes.push({
+                        x: Math.random() * 100,
+                        y: Math.random() * 100,
+                        connections: []
+                    });
+                }
+                
+                // Create connections
+                nodes.forEach((node, i) => {
+                    // Connect to 2-4 other nodes
+                    const connectionCount = Math.floor(Math.random() * 3) + 2;
+                    for (let j = 0; j < connectionCount; j++) {
+                        const targetIndex = Math.floor(Math.random() * nodes.length);
+                        if (targetIndex !== i && !node.connections.includes(targetIndex)) {
+                            node.connections.push(targetIndex);
+                            
+                            const target = nodes[targetIndex];
+                            const distance = Math.sqrt(
+                                Math.pow(node.x - target.x, 2) + 
+                                Math.pow(node.y - target.y, 2)
+                            );
+                            
+                            if (distance < 40) { // Only connect nearby nodes
+                                const line = document.createElement('div');
+                                line.className = 'neural-line';
+                                line.style.width = `${distance}vw`;
+                                line.style.left = `${node.x}vw`;
+                                line.style.top = `${node.y}vh`;
+                                line.style.transform = `rotate(${Math.atan2(target.y - node.y, target.x - node.x)}rad)`;
+                                line.style.animationDelay = `${Math.random() * 2}s`;
+                                container.appendChild(line);
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Create data stream visualization
+            function createDataStream() {
+                const container = document.getElementById('dataStream');
+                const characters = '01';
+                
+                setInterval(() => {
+                    const dataBit = document.createElement('div');
+                    dataBit.className = 'data-bit';
+                    dataBit.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+                    dataBit.style.left = `${Math.random() * 100}%`;
+                    dataBit.style.fontSize = `${Math.random() * 10 + 10}px`;
+                    dataBit.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                    container.appendChild(dataBit);
+                    
+                    // Remove old elements
+                    if (container.children.length > 100) {
+                        container.removeChild(container.children[0]);
+                    }
+                }, 100);
+            }
+            
+            // Create binary rain effect
+            function createBinaryRain() {
+                const container = document.getElementById('binaryRain');
+                const columns = Math.floor(window.innerWidth / 20);
+                
+                for (let i = 0; i < columns; i++) {
+                    const column = document.createElement('div');
+                    column.style.position = 'absolute';
+                    column.style.left = `${i * 20}px`;
+                    column.style.width = '20px';
+                    column.style.height = '100vh';
+                    column.style.fontFamily = 'Courier New, monospace';
+                    column.style.fontWeight = 'bold';
+                    column.style.color = 'rgba(0,255,252,0.3)';
+                    column.style.fontSize = '18px';
+                    column.style.textAlign = 'center';
+                    column.style.wordBreak = 'break-all';
+                    column.style.overflow = 'hidden';
+                    container.appendChild(column);
+                    
+                    animateBinaryColumn(column);
+                }
+            }
+            
+            function animateBinaryColumn(column) {
+                let content = '';
+                const length = Math.floor(Math.random() * 10) + 5;
+                const speed = Math.random() * 100 + 50;
+                
+                for (let i = 0; i < length; i++) {
+                    content += Math.round(Math.random()) + '<br>';
+                }
+                
+                column.innerHTML = content;
+                
+                function update() {
+                    content = content.substring(content.indexOf('<br>') + 4);
+                    content += Math.round(Math.random()) + '<br>';
+                    column.innerHTML = content;
+                }
+                
+                setInterval(update, speed);
+            }
+            
+            // Add interactive card effects
+            function addInteractiveEffects() {
+                const cards = document.querySelectorAll('.course-card, .webinar-card');
+                
+                cards.forEach(card => {
+                    card.classList.add('interactive-card');
+                    
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        card.style.setProperty('--mouse-x', `${x - rect.width}px`);
+                        card.style.setProperty('--mouse-y', `${y - rect.height}px`);
+                    });
+                });
+            }
+            
+            // Create AI brain visualization
+            function createAIBrain() {
+                const container = document.querySelector('.ai-model-display');
+                const brainContainer = document.createElement('div');
+                brainContainer.className = 'ai-brain';
+                container.appendChild(brainContainer);
+                
+                // Create nodes
+                const nodeCount = 20;
+                const nodes = [];
+                
+                for (let i = 0; i < nodeCount; i++) {
+                    const node = document.createElement('div');
+                    node.className = 'brain-node';
+                    node.style.left = `${Math.random() * 100}%`;
+                    node.style.top = `${Math.random() * 100}%`;
+                    node.style.animationDelay = `${Math.random() * 2}s`;
+                    brainContainer.appendChild(node);
+                    nodes.push(node);
+                }
+                
+                // Create connections
+                nodes.forEach((node, i) => {
+                    // Connect to 2-3 other nodes
+                    const connectionCount = Math.floor(Math.random() * 2) + 2;
+                    for (let j = 0; j < connectionCount; j++) {
+                        const targetIndex = Math.floor(Math.random() * nodes.length);
+                        if (targetIndex !== i) {
+                            const target = nodes[targetIndex];
+                            const line = document.createElement('div');
+                            line.className = 'brain-connection';
+                            
+                            const x1 = parseInt(node.style.left);
+                            const y1 = parseInt(node.style.top);
+                            const x2 = parseInt(target.style.left);
+                            const y2 = parseInt(target.style.top);
+                            
+                            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                            const angle = Math.atan2(y2 - y1, x2 - x1);
+                            
+                            line.style.width = `${length}%`;
+                            line.style.left = `${x1}%`;
+                            line.style.top = `${y1}%`;
+                            line.style.transform = `rotate(${angle}rad)`;
+                            line.style.animationDelay = `${Math.random() * 3}s`;
+                            
+                            brainContainer.appendChild(line);
+                        }
+                    }
+                });
+            }
+            
+            // Initialize all animations when DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                createFloatingOrbs();
+                createNeuralNetwork();
+                createDataStream();
+                createBinaryRain();
+                addInteractiveEffects();
+                
+                // Add holographic effect to AI model display
+                const aiDisplay = document.querySelector('.ai-model-display');
+                aiDisplay.classList.add('holographic-text');
+                
+                // Create AI brain visualization when prediction is made
+                const predictBtn = document.getElementById('predictBtn');
+                if (predictBtn) {
+                    predictBtn.addEventListener('click', function() {
+                        setTimeout(() => {
+                            if (!document.querySelector('.ai-brain')) {
+                                createAIBrain();
+                            }
+                        }, 1000);
+                    });
+                }
+            });
+        </script>
+        <div class="neural-network" id="neuralNetwork"></div>
+        <div class="data-stream" id="dataStream"></div>
+        <div class="binary-rain" id="binaryRain"></div>
+        
 </body>
 </html>
