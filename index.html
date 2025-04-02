@@ -957,10 +957,10 @@
         font-weight: 600;
     }
 
-/*Add this CSS to blur everything except the AI Performance Predictor  
+/*Add this CSS to blur everything except the AI Performance Predictor*/
 body {
         position: relative;
-    }
+    } 
     
     body::before {
         content: '';
@@ -971,11 +971,11 @@ body {
         height: 100%;
         backdrop-filter: blur(5px);
         z-index: 1000;
-        pointer-events: none;  Allows clicking through the blur layer &
+        pointer-events: none;  /*Allows clicking through the blur layer &*/
     } 
-    */ 
+    
     /* Exclude the AI Performance Predictor section from the blur */
-    /*
+    
     #ai-model,
     #webinars,
     #webinars *,
@@ -1522,108 +1522,7 @@ body {
     <!-- Floating Particles Background -->
     <div class="floating-particles" id="particles-js"></div>
     
-    <h1>Eye Tracking Calibration Fix</h1>
-    <div id="status">Initializing...</div>
-    <button id="startButton">Start Calibration</button>
-    
-    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
-    <script>
-        const calibrationPoints = [
-            {x: 0.1, y: 0.1}, {x: 0.9, y: 0.1},
-            {x: 0.1, y: 0.9}, {x: 0.9, y: 0.9},
-            {x: 0.5, y: 0.5}
-        ];
-        let currentPoint = 0;
-
-        async function initializeWebGazer() {
-            try {
-                // Check camera access first
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                stream.getTracks().forEach(track => track.stop());
-                
-                webgazer.setRegression('ridge')
-                    .setTracker('TFFacemesh')
-                    .begin()
-                    .showPredictionPoints(false)
-                    .showVideoPreview(true)
-                    .showFaceOverlay(false);
-
-                document.getElementById('status').textContent = "Ready - Click Start Calibration!";
-                console.log('WebGazer initialized successfully');
-            } catch (error) {
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                console.error('Initialization error:', error);
-            }
-        }
-
-        function createCalibrationPoint(x, y) {
-            const point = document.createElement('div');
-            point.className = 'calibration-point';
-            point.style.left = `${window.innerWidth * x - 15}px`;
-            point.style.top = `${window.innerHeight * y - 15}px`;
-
-            point.addEventListener('click', async () => {
-                point.classList.add('active');
-                try {
-                    await webgazer.addCalibrationPoint(
-                        window.innerWidth * x,
-                        window.innerHeight * y,
-                        currentPoint,
-                        point
-                    );
-                    console.log(`Calibration point ${currentPoint} recorded`);
-                    
-                    if(currentPoint < calibrationPoints.length - 1) {
-                        currentPoint++;
-                        createNextPoint();
-                    } else {
-                        document.querySelectorAll('.calibration-point').forEach(p => p.remove());
-                        document.getElementById('status').textContent = "Calibration complete! Move your eyes to test.";
-                        webgazer.start();
-                    }
-                } catch (error) {
-                    console.error('Calibration error:', error);
-                    document.getElementById('status').textContent = `Calibration failed: ${error.message}`;
-                }
-                setTimeout(() => point.classList.remove('active'), 300);
-            });
-
-            document.body.appendChild(point);
-        }
-
-        function createNextPoint() {
-            const next = calibrationPoints[currentPoint];
-            createCalibrationPoint(next.x, next.y);
-            document.getElementById('status').textContent = 
-                `Calibrate point ${currentPoint + 1}/${calibrationPoints.length}`;
-        }
-
-        // Event listeners
-        document.getElementById('startButton').addEventListener('click', () => {
-            document.getElementById('startButton').disabled = true;
-            createNextPoint();
-        });
-
-        window.addEventListener('resize', () => {
-            webgazer.params.videoViewerWidth = 320;
-            webgazer.params.videoViewerHeight = 240;
-            webgazer.resize();
-        });
-
-        // Initialize when ready
-        window.addEventListener('load', async () => {
-            if (!navigator.mediaDevices?.getUserMedia) {
-                document.getElementById('status').textContent = "Camera API not supported";
-                return;
-            }
-            
-            try {
-                await initializeWebGazer();
-            } catch (error) {
-                document.getElementById('status').textContent = `Initialization failed: ${error.message}`;
-            }
-        });
-    </script>
+   
 
 
     <!-- Navigation -->
