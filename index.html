@@ -14,6 +14,532 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
+    /* Parallax Course Content Module */
+    #webgazerVideoContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            height: 240px;
+            border: 2px solid #333;
+        }
+        #gazeDot {
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+            position: absolute;
+            display: none;
+        }
+        .calibration-point {
+            width: 30px;
+            height: 30px;
+            background: #2196F3;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+        }
+        #instructions {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+    .parallax-course-container {
+        perspective: 1000px;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+    }
+    
+    .parallax-course-section {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform-style: preserve-3d;
+        z-index: 10;
+    }
+    
+    .course-content-layer {
+        position: absolute;
+        width: 80%;
+        max-width: 900px;
+        background: rgba(20, 20, 40, 0.9);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+        border: 1px solid var(--neon-purple);
+        transform: translateZ(0);
+        transition: all 0.5s ease-out;
+    }
+    
+    .course-diagram-layer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateZ(-200px) scale(1.2);
+        transition: all 0.5s ease-out;
+    }
+    
+    .course-diagram {
+        width: 80%;
+        max-width: 600px;
+        height: auto;
+        opacity: 0.7;
+        filter: drop-shadow(0 0 20px rgba(0, 255, 252, 0.5));
+    }
+    
+    .course-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .course-hours {
+        display: inline-block;
+        padding: 5px 15px;
+        background: rgba(188, 19, 254, 0.2);
+        border-radius: 20px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        border: 1px solid var(--neon-purple);
+    }
+    
+    .module-list {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    
+    .module-item {
+        position: relative;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: rgba(30, 30, 60, 0.5);
+        border-left: 3px solid var(--neon-blue);
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .module-item:hover {
+        transform: translateX(10px);
+        background: rgba(30, 30, 60, 0.8);
+        box-shadow: 0 5px 15px rgba(0, 255, 252, 0.3);
+    }
+    
+    .module-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .module-title {
+        font-weight: 600;
+        margin-bottom: 0;
+        color: var(--neon-blue);
+    }
+    
+    .module-hours {
+        font-size: 0.8rem;
+        color: var(--neon-pink);
+    }
+    
+    .topic-list {
+        margin-top: 10px;
+        padding-left: 20px;
+        list-style-type: none;
+        display: none;
+    }
+    
+    .topic-item {
+        position: relative;
+        padding: 8px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .topic-item:last-child {
+        border-bottom: none;
+    }
+    
+    .topic-item::before {
+        content: "▹";
+        position: absolute;
+        left: -15px;
+        color: var(--neon-blue);
+    }
+    
+    .active .topic-list {
+        display: block;
+    }
+    
+    .parallax-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(11, 11, 41, 0.8), rgba(92, 12, 92, 0.6));
+        transform: translateZ(-500px);
+        z-index: 1;
+    }
+    
+    .parallax-nav {
+        position: fixed;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+    }
+    
+    .parallax-dot {
+        display: block;
+        width: 12px;
+        height: 12px;
+        margin: 15px 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid var(--neon-blue);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .parallax-dot.active {
+        background: var(--neon-blue);
+        transform: scale(1.3);
+        box-shadow: 0 0 10px var(--neon-blue);
+    }
+    
+    /* Learning Path Visualization */
+    .learning-path {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .path-node {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--neon-blue);
+        box-shadow: 0 0 15px var(--neon-blue);
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+    
+    .path-connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+        transform-origin: left center;
+        z-index: 1;
+    }
+    
+    .path-label {
+        position: absolute;
+        color: white;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        transform: translateY(-50%);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .course-content-layer {
+            width: 90%;
+            padding: 20px;
+        }
+        
+        .course-title {
+            font-size: 2rem;
+        }
+        
+        .parallax-nav {
+            right: 15px;
+        }
+    }
+    /* Learning DNA Visualization Styles */
+    .dna-helix-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+    
+    #dnaCanvas {
+        display: block;
+        margin: 0 auto;
+        background: rgba(20, 20, 40, 0.3);
+        border-radius: 10px;
+    }
+    
+    .dna-node {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
+    }
+    
+    .dna-connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+        transform-origin: left center;
+    }
+    
+    /* Learning Path Module Styles */
+    .learning-module {
+        background: rgba(30, 30, 60, 0.5);
+        border-left: 3px solid var(--neon-purple);
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .learning-module:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+    
+    .module-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .module-title {
+        font-weight: 600;
+        color: var(--neon-blue);
+        margin-bottom: 0;
+    }
+    
+    .module-status {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 20px;
+    }
+    
+    .status-not-started {
+        background: rgba(255, 0, 255, 0.2);
+        color: var(--neon-pink);
+    }
+    
+    .status-in-progress {
+        background: rgba(188, 19, 254, 0.2);
+        color: var(--neon-purple);
+    }
+    
+    .status-completed {
+        background: rgba(0, 255, 252, 0.2);
+        color: var(--neon-blue);
+    }
+    
+    .module-topics {
+        margin-top: 10px;
+    }
+    
+    .topic-item {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .topic-item:last-child {
+        border-bottom: none;
+    }
+    
+    .topic-check {
+        margin-right: 10px;
+        color: var(--neon-blue);
+    }
+    
+    /* Assessment Question Styles */
+    .answer-option {
+        background: rgba(20, 20, 40, 0.7);
+        border: 1px solid rgba(188, 19, 254, 0.3);
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .answer-option:hover {
+        background: rgba(30, 30, 60, 0.7);
+        border-color: var(--neon-blue);
+    }
+    
+    .answer-option.selected {
+        background: rgba(188, 19, 254, 0.2);
+        border-color: var(--neon-purple);
+        box-shadow: 0 0 10px rgba(188, 19, 254, 0.3);
+    }
+    
+    /* Difficulty Adjustment Styles */
+    .form-range::-webkit-slider-thumb {
+        background: var(--neon-purple);
+    }
+    
+    .form-range::-moz-range-thumb {
+        background: var(--neon-purple);
+    }
+    
+    .form-range::-ms-thumb {
+        background: var(--neon-purple);
+    }
+         /* Learning DNA Visualization Styles */
+    .dna-helix-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+    
+    #dnaCanvas {
+        display: block;
+        margin: 0 auto;
+        background: rgba(20, 20, 40, 0.3);
+        border-radius: 10px;
+    }
+    
+    .dna-node {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s ease;
+    }
+    
+    .dna-connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+        transform-origin: left center;
+    }
+    
+    /* Learning Path Module Styles */
+    .learning-module {
+        background: rgba(30, 30, 60, 0.5);
+        border-left: 3px solid var(--neon-purple);
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .learning-module:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+    }
+    
+    .module-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .module-title {
+        font-weight: 600;
+        color: var(--neon-blue);
+        margin-bottom: 0;
+    }
+    
+    .module-status {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 20px;
+    }
+    
+    .status-not-started {
+        background: rgba(255, 0, 255, 0.2);
+        color: var(--neon-pink);
+    }
+    
+    .status-in-progress {
+        background: rgba(188, 19, 254, 0.2);
+        color: var(--neon-purple);
+    }
+    
+    .status-completed {
+        background: rgba(0, 255, 252, 0.2);
+        color: var(--neon-blue);
+    }
+    
+    .module-topics {
+        margin-top: 10px;
+    }
+    
+    .topic-item {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .topic-item:last-child {
+        border-bottom: none;
+    }
+    
+    .topic-check {
+        margin-right: 10px;
+        color: var(--neon-blue);
+    }
+    
+    /* Assessment Question Styles */
+    .answer-option {
+        background: rgba(20, 20, 40, 0.7);
+        border: 1px solid rgba(188, 19, 254, 0.3);
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .answer-option:hover {
+        background: rgba(30, 30, 60, 0.7);
+        border-color: var(--neon-blue);
+    }
+    
+    .answer-option.selected {
+        background: rgba(188, 19, 254, 0.2);
+        border-color: var(--neon-purple);
+        box-shadow: 0 0 10px rgba(188, 19, 254, 0.3);
+    }
+    
+    /* Difficulty Adjustment Styles */
+    .form-range::-webkit-slider-thumb {
+        background: var(--neon-purple);
+    }
+    
+    .form-range::-moz-range-thumb {
+        background: var(--neon-purple);
+    }
+    
+    .form-range::-ms-thumb {
+        background: var(--neon-purple);
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--neon-purple);
+        border-color: var(--neon-purple);
+    }
 /* New AI Animation Styles */
     
     /* Floating AI Orbs */
@@ -397,7 +923,7 @@
         font-weight: 600;
     }
 
-/*Add this CSS to blur everything except the AI Performance Predictor  */
+/*Add this CSS to blur everything except the AI Performance Predictor  
 body {
         position: relative;
     }
@@ -411,11 +937,11 @@ body {
         height: 100%;
         backdrop-filter: blur(5px);
         z-index: 1000;
-        pointer-events: none;  */ Allows clicking through the blur layer &/
+        pointer-events: none;  Allows clicking through the blur layer &
     } 
-    
+    */ 
     /* Exclude the AI Performance Predictor section from the blur */
-
+    /*
     #ai-model,
     #webinars,
     #webinars *,
@@ -941,6 +1467,20 @@ body {
                 font-size: 1.3rem;
             }
         }
+        #video-container {
+            position: relative;
+            width: 640px;
+            height: 480px;
+        }
+        #video, #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
        
     </style>
 </head>
@@ -948,6 +1488,89 @@ body {
     <!-- Floating Particles Background -->
     <div class="floating-particles" id="particles-js"></div>
     
+    <h1>Eye Tracking Demo</h1>
+    <div id="instructions">
+        Click on the blue dots to calibrate. Look around to see gaze tracking!
+    </div>
+    <div id="gazeDot"></div>
+    <!-- WebGazer elements will be added here automatically -->
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+    <script>
+        let calibrationPoints = [
+            {x: 0.1, y: 0.1},   // Top-left
+            {x: 0.9, y: 0.1},   // Top-right
+            {x: 0.5, y: 0.5},   // Center
+            {x: 0.1, y: 0.9},   // Bottom-left
+            {x: 0.9, y: 0.9}    // Bottom-right
+        ];
+        let currentCalibrationPoint = 0;
+
+        // Initialize WebGazer
+        webgazer.setRegression('ridge')
+               .setTracker('TFFacemesh')
+               .setGazeListener(function(data, elapsedTime) {
+                   if (data) {
+                       const gazeDot = document.getElementById('gazeDot');
+                       gazeDot.style.display = 'block';
+                       gazeDot.style.left = (data.x - 10) + 'px';
+                       gazeDot.style.top = (data.y - 10) + 'px';
+                   }
+               })
+               .begin()
+               .showPredictionPoints(true);
+
+        // Set up calibration
+        function createCalibrationPoint(x, y) {
+            const point = document.createElement('div');
+            point.className = 'calibration-point';
+            point.style.left = (window.innerWidth * x - 15) + 'px';
+            point.style.top = (window.innerHeight * y - 15) + 'px';
+            
+            point.addEventListener('click', function() {
+                webgazer.addCalibrationPoint(
+                    window.innerWidth * x,
+                    window.innerHeight * y,
+                    currentCalibrationPoint,
+                    this
+                );
+                
+                if(currentCalibrationPoint < calibrationPoints.length-1) {
+                    currentCalibrationPoint++;
+                    createNextCalibrationPoint();
+                } else {
+                    document.querySelectorAll('.calibration-point').forEach(p => p.remove());
+                }
+            });
+            
+            document.body.appendChild(point);
+        }
+
+        function createNextCalibrationPoint() {
+            createCalibrationPoint(
+                calibrationPoints[currentCalibrationPoint].x,
+                calibrationPoints[currentCalibrationPoint].y
+            );
+        }
+
+        // Start calibration when user clicks
+        document.getElementById('instructions').addEventListener('click', () => {
+            createNextCalibrationPoint();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            webgazer.params.videoViewerWidth = 320;
+            webgazer.params.videoViewerHeight = 240;
+            webgazer.resize();
+        });
+
+        // Remove video container if needed
+        window.onbeforeunload = function() {
+            webgazer.end();
+        }
+    </script>
+
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
@@ -999,61 +1622,89 @@ body {
     </section>
     
     <!-- Courses Section -->
-    <section id="courses" class="py-5">
-        <div class="container">
-            <h2 class="section-title text-center mb-5">Our <span class="glow" style="color: var(--neon-blue);">Courses</span></h2>
-            <div class="row g-4">
-                <!-- Use AI Course -->
-                <div class="col-lg-6">
-                    <div class="course-card h-100">
-                        <div class="course-card-header">
-                            <h3 class="course-card-title">Use AI</h3>
-                            <p class="text-light mb-0">Master AI applications in real-world scenarios</p>
-                        </div>
-                        <div class="course-card-body">
-                            <p class="mb-4">Learn how to effectively implement and utilize existing AI technologies in various industries and applications.</p>
-                            <ul class="mb-4">
-                                <li>AI Tools and Frameworks</li>
-                                <li>Data Analysis with AI</li>
-                                <li>AI for Business Solutions</li>
-                                <li>Ethical AI Implementation</li>
-                                <li>Case Studies and Projects</li>
-                            </ul>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="#" class="btn btn-sm btn-neon" data-bs-toggle="modal" data-bs-target="#registerModal" data-course="Use AI">Register Now</a>
-                                <a href="#" class="btn btn-sm btn-outline-light download-syllabus" data-course="use-ai">Download Syllabus</a>
-                            </div>
+   <!-- Courses Section -->
+<section id="courses" class="py-5">
+    
+    <div class="container">
+        
+        <h2 class="section-title text-center mb-5">Our <span class="glow" style="color: var(--neon-blue);">Courses</span></h2>
+        <div class="row g-4">
+            <!-- Use AI Course -->
+            <div class="col-lg-4">
+                <div class="course-card h-100">
+                    <div class="course-card-header">
+                        <h3 class="course-card-title">Use AI</h3>
+                        <p class="text-light mb-0">Master AI applications in real-world scenarios</p>
+                    </div>
+                    <div class="course-card-body">
+                        <p class="mb-4">Learn how to effectively implement and utilize existing AI technologies in various industries and applications.</p>
+                        <ul class="mb-4">
+                            <li>AI Tools and Frameworks</li>
+                            <li>Data Analysis with AI</li>
+                            <li>AI for Business Solutions</li>
+                            <li>Ethical AI Implementation</li>
+                            <li>Case Studies and Projects</li>
+                        </ul>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="btn btn-sm btn-neon" data-bs-toggle="modal" data-bs-target="#registerModal" data-course="Use AI">Register Now</a>
+                            <a href="#" class="btn btn-sm btn-outline-light download-syllabus" data-course="use-ai">Download Syllabus</a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Create AI Course -->
-                <div class="col-lg-6">
-                    <div class="course-card h-100">
-                        <div class="course-card-header">
-                            <h3 class="course-card-title">Create AI</h3>
-                            <p class="text-light mb-0">Build your own AI models from scratch</p>
+            </div>
+            
+            <!-- Create AI Course -->
+            <div class="col-lg-4">
+                <div class="course-card h-100">
+                    <div class="course-card-header">
+                        <h3 class="course-card-title">Create AI with C# and TorchSharp</h3>
+                        <p class="text-light mb-0">Build your own AI models from scratch</p>
+                    </div>
+                    <div class="course-card-body">
+                        <p class="mb-4">Dive deep into AI development, from fundamental algorithms to advanced neural network architectures.</p>
+                        <ul class="mb-4">
+                            <li>Machine Learning Fundamentals</li>
+                            <li>Deep Learning Architectures</li>
+                            <li>Natural Language Processing</li>
+                            <li>Computer Vision</li>
+                            <li>AI Model Deployment</li>
+                        </ul>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="btn btn-sm btn-neon" data-bs-toggle="modal" data-bs-target="#registerModal" data-course="Create AI">Register Now</a>
+                            <a href="#" class="btn btn-sm btn-outline-light download-syllabus" data-course="create-ai">Download Syllabus</a>
                         </div>
-                        <div class="course-card-body">
-                            <p class="mb-4">Dive deep into AI development, from fundamental algorithms to advanced neural network architectures.</p>
-                            <ul class="mb-4">
-                                <li>Machine Learning Fundamentals</li>
-                                <li>Deep Learning Architectures</li>
-                                <li>Natural Language Processing</li>
-                                <li>Computer Vision</li>
-                                <li>AI Model Deployment</li>
-                            </ul>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="#" class="btn btn-sm btn-neon" data-bs-toggle="modal" data-bs-target="#registerModal" data-course="Create AI">Register Now</a>
-                                <a href="#" class="btn btn-sm btn-outline-light download-syllabus" data-course="create-ai">Download Syllabus</a>
-                            </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ML with Python & TensorFlow Course -->
+            <div class="col-lg-4">
+                <div class="course-card h-100">
+                    <div class="course-card-header">
+                        <h3 class="course-card-title">Create AI with Python & TensorFlow</h3>
+                        <p class="text-light mb-0">Hands-on machine learning with industry-standard tools</p>
+                    </div>
+                    <div class="course-card-body">
+                        <p class="mb-4">Master practical machine learning techniques using Python and TensorFlow to build, train, and deploy models.</p>
+                        <ul class="mb-4">
+                            <li>Python for Data Science</li>
+                            <li>TensorFlow Fundamentals</li>
+                            <li>Neural Networks Implementation</li>
+                            <li>Model Training & Optimization</li>
+                            <li>Real-world ML Pipelines</li>
+                            <li>TensorFlow Serving & Deployment</li>
+                        </ul>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="btn btn-sm btn-neon" data-bs-toggle="modal" data-bs-target="#registerModal" data-course="ML with Python & TensorFlow">Register Now</a>
+                            <a href="#" class="btn btn-sm btn-outline-light download-syllabus" data-course="ml-python-tensorflow">Download Syllabus</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    
+    </div>
+   
+</section>
    <!-- Webinars Section -->
 <section id="webinars" class="webinar-section py-5">
     <div class="container">
@@ -1352,6 +2003,8 @@ body {
             <i class="fas fa-volume-up"></i> Sound On
         </button>
     </div>
+    <!-- Add this in the body where you want the parallax course content -->
+
     
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1361,6 +2014,7 @@ body {
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
         <!-- Custom JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+        
     <script>
         // Initialize particles
         document.addEventListener('DOMContentLoaded', function() {
@@ -2370,6 +3024,138 @@ function handleRegistration(e) {
                 }
             });
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add click event listeners to all download syllabus buttons
+                const downloadButtons = document.querySelectorAll('.download-syllabus');
+                
+                downloadButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const courseType = this.getAttribute('data-course');
+                        downloadSyllabus(courseType);
+                    });
+                });
+                
+                function downloadSyllabus(courseType) {
+                    // Determine the API endpoint based on the course type
+                    const apiUrl = `https://localhost:7165/api/Toc/productivity`;
+
+                    const apiUrl1 = `https://localhost:7165/api/Toc/development`;
+
+                    const apiUrl2 = "https://localhost:7165/api/Toc/python-ai";
+                    
+                    // Create a temporary link element to trigger the download
+                    const link = document.createElement('a');
+                    link.href = apiUrl;
+
+                    const link2 = document.createElement('a');
+                    link2.href = apiUrl1;
+
+
+                    const link3 = document.createElement('a');
+                    link3.href = apiUrl2;
+                    
+                    
+                    // Set the download attribute with an appropriate filename
+                    if (courseType === 'use-ai') {
+                        link.download = 'Use-AI-Syllabus.html'; // or whatever file type you're using
+                    } else if (courseType === 'create-ai') {
+                        link2.download = 'Create-AI-Syllabus.html'; // or whatever file type you're using
+                    }
+                    else if(courseType=== "ml-python-tensorflow"){
+
+                    }
+                    
+                    // Append to the body, click it, and then remove it
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    document.body.appendChild(link2);
+                    link2.click();
+                    document.body.removeChild(link2);
+
+                    document.body.appendChild(link3);
+                    link3.click();
+                    document.body.removeChild(link3);
+                }
+            });
+            </script>
+            
+            <script>
+// script.js
+let video = document.getElementById('video');
+let canvas = document.getElementById('overlay');
+let ctx = canvas.getContext('2d');
+
+// Start webcam
+async function startVideo() {
+    alert("hi");
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+            video.onloadedmetadata = () => resolve();
+        });
+    } catch (err) {
+        console.error("Error accessing the camera:", err);
+    }
+}let model;
+async function loadModel() {
+    model = await faceLandmarksDetection.load(
+        faceLandmarksDetection.SupportedPackages.mediapipeFacemesh,
+        { maxFaces: 1 }
+    );
+}async function detectEyes() {
+    const predictions = await model.estimateFaces({ input: video });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (predictions.length > 0) {
+        const keypoints = predictions[0].scaledMesh;
+        // Draw facial landmarks (optional)
+        keypoints.forEach(point => {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(point[0], point[1], 2, 2);
+        });
+
+        // Estimate eye direction
+        const leftEye = keypoints.slice(468, 473);  // Left eye landmarks
+        const rightEye = keypoints.slice(473, 478); // Right eye landmarks
+        const direction = getEyeDirection(leftEye, rightEye);
+        document.getElementById('direction').textContent = direction;
+    }
+
+    requestAnimationFrame(detectEyes);
+}
+
+function getEyeDirection(leftEye, rightEye) {
+
+    // Calculate average position of eye landmarks
+    const getCenter = (points) => {
+        const avgX = points.reduce((sum, p) => sum + p[0], 0) / points.length;
+        const avgY = points.reduce((sum, p) => sum + p[1], 0) / points.length;
+        return { x: avgX, y: avgY };
+    };
+
+    const leftCenter = getCenter(leftEye);
+    const rightCenter = getCenter(rightEye);
+
+    // Compare position to eye region (simplified logic)
+    if (leftCenter.x < leftEye[0][0]) return "LEFT";
+    if (leftCenter.x > leftEye[3][0]) return "RIGHT";
+    if (leftCenter.y < leftEye[1][1]) return "UP";
+    if (leftCenter.y > leftEye[4][1]) return "DOWN";
+    return "CENTER";
+}(async function main() {
+    await startVideo();
+    await loadModel();
+    video.play();
+    detectEyes();
+})();
+
+            </script>
+        
         <div class="neural-network" id="neuralNetwork"></div>
         <div class="data-stream" id="dataStream"></div>
         <div class="binary-rain" id="binaryRain"></div>
