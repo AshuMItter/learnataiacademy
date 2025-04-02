@@ -15,6 +15,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
     /* Parallax Course Content Module */
+    body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #status {
+            color: red;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .calibration-point {
+            width: 30px;
+            height: 30px;
+            background: #2196F3;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .calibration-point.active {
+            transform: scale(1.5);
+            background: #FF5722;
+        }
+        #webgazerVideoContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            height: 240px;
+            border: 2px solid #333;
+        }
+
     #webgazerVideoContainer {
             position: fixed;
             top: 20px;
@@ -1488,86 +1522,107 @@ body {
     <!-- Floating Particles Background -->
     <div class="floating-particles" id="particles-js"></div>
     
-    <h1>Eye Tracking Demo</h1>
-    <div id="instructions">
-        Click on the blue dots to calibrate. Look around to see gaze tracking!
-    </div>
-    <div id="gazeDot"></div>
-    <!-- WebGazer elements will be added here automatically -->
+    <h1>Eye Tracking Calibration Fix</h1>
+    <div id="status">Initializing...</div>
+    <button id="startButton">Start Calibration</button>
+    
     <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
     <script>
-        let calibrationPoints = [
-            {x: 0.1, y: 0.1},   // Top-left
-            {x: 0.9, y: 0.1},   // Top-right
-            {x: 0.5, y: 0.5},   // Center
-            {x: 0.1, y: 0.9},   // Bottom-left
-            {x: 0.9, y: 0.9}    // Bottom-right
+        const calibrationPoints = [
+            {x: 0.1, y: 0.1}, {x: 0.9, y: 0.1},
+            {x: 0.1, y: 0.9}, {x: 0.9, y: 0.9},
+            {x: 0.5, y: 0.5}
         ];
-        let currentCalibrationPoint = 0;
+        let currentPoint = 0;
 
-        // Initialize WebGazer
-        webgazer.setRegression('ridge')
-               .setTracker('TFFacemesh')
-               .setGazeListener(function(data, elapsedTime) {
-                   if (data) {
-                       const gazeDot = document.getElementById('gazeDot');
-                       gazeDot.style.display = 'block';
-                       gazeDot.style.left = (data.x - 10) + 'px';
-                       gazeDot.style.top = (data.y - 10) + 'px';
-                   }
-               })
-               .begin()
-               .showPredictionPoints(true);
+        async function initializeWebGazer() {
+            try {
+                // Check camera access first
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                stream.getTracks().forEach(track => track.stop());
+                
+                webgazer.setRegression('ridge')
+                    .setTracker('TFFacemesh')
+                    .begin()
+                    .showPredictionPoints(false)
+                    .showVideoPreview(true)
+                    .showFaceOverlay(false);
 
-        // Set up calibration
+                document.getElementById('status').textContent = "Ready - Click Start Calibration!";
+                console.log('WebGazer initialized successfully');
+            } catch (error) {
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                console.error('Initialization error:', error);
+            }
+        }
+
         function createCalibrationPoint(x, y) {
             const point = document.createElement('div');
             point.className = 'calibration-point';
-            point.style.left = (window.innerWidth * x - 15) + 'px';
-            point.style.top = (window.innerHeight * y - 15) + 'px';
-            
-            point.addEventListener('click', function() {
-                webgazer.addCalibrationPoint(
-                    window.innerWidth * x,
-                    window.innerHeight * y,
-                    currentCalibrationPoint,
-                    this
-                );
-                
-                if(currentCalibrationPoint < calibrationPoints.length-1) {
-                    currentCalibrationPoint++;
-                    createNextCalibrationPoint();
-                } else {
-                    document.querySelectorAll('.calibration-point').forEach(p => p.remove());
+            point.style.left = `${window.innerWidth * x - 15}px`;
+            point.style.top = `${window.innerHeight * y - 15}px`;
+
+            point.addEventListener('click', async () => {
+                point.classList.add('active');
+                try {
+                    await webgazer.addCalibrationPoint(
+                        window.innerWidth * x,
+                        window.innerHeight * y,
+                        currentPoint,
+                        point
+                    );
+                    console.log(`Calibration point ${currentPoint} recorded`);
+                    
+                    if(currentPoint < calibrationPoints.length - 1) {
+                        currentPoint++;
+                        createNextPoint();
+                    } else {
+                        document.querySelectorAll('.calibration-point').forEach(p => p.remove());
+                        document.getElementById('status').textContent = "Calibration complete! Move your eyes to test.";
+                        webgazer.start();
+                    }
+                } catch (error) {
+                    console.error('Calibration error:', error);
+                    document.getElementById('status').textContent = `Calibration failed: ${error.message}`;
                 }
+                setTimeout(() => point.classList.remove('active'), 300);
             });
-            
+
             document.body.appendChild(point);
         }
 
-        function createNextCalibrationPoint() {
-            createCalibrationPoint(
-                calibrationPoints[currentCalibrationPoint].x,
-                calibrationPoints[currentCalibrationPoint].y
-            );
+        function createNextPoint() {
+            const next = calibrationPoints[currentPoint];
+            createCalibrationPoint(next.x, next.y);
+            document.getElementById('status').textContent = 
+                `Calibrate point ${currentPoint + 1}/${calibrationPoints.length}`;
         }
 
-        // Start calibration when user clicks
-        document.getElementById('instructions').addEventListener('click', () => {
-            createNextCalibrationPoint();
+        // Event listeners
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').disabled = true;
+            createNextPoint();
         });
 
-        // Handle window resize
         window.addEventListener('resize', () => {
             webgazer.params.videoViewerWidth = 320;
             webgazer.params.videoViewerHeight = 240;
             webgazer.resize();
         });
 
-        // Remove video container if needed
-        window.onbeforeunload = function() {
-            webgazer.end();
-        }
+        // Initialize when ready
+        window.addEventListener('load', async () => {
+            if (!navigator.mediaDevices?.getUserMedia) {
+                document.getElementById('status').textContent = "Camera API not supported";
+                return;
+            }
+            
+            try {
+                await initializeWebGazer();
+            } catch (error) {
+                document.getElementById('status').textContent = `Initialization failed: ${error.message}`;
+            }
+        });
     </script>
 
 
