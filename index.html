@@ -1064,7 +1064,7 @@
     }
     
 
-/*Add this CSS to blur everything except the AI Performance Predictor
+/*Add this CSS to blur everything except the AI Performance Predictor */
 body {
         position: relative;
     } 
@@ -1078,13 +1078,15 @@ body {
         height: 100%;
         backdrop-filter: blur(5px);
         z-index: 1000;
-        pointer-events: none;  Allows clicking through the blur layer &
+        pointer-events: none; /* Allows clicking through the blur layer &*/
     } 
     
     /* Exclude the AI Performance Predictor section from the blur */
     
     #ai-model,
     #webinars,
+    #live,
+    #live *,
     #webinars *,
     #ai-model * {
         backdrop-filter: none !important;
@@ -1098,6 +1100,7 @@ body {
     
     /* Make sure the AI section appears above the blur layer */
     #webinars,
+    #live,
     #ai-model {
         position: relative;
         z-index: 1001;
