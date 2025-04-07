@@ -1884,6 +1884,8 @@ body {
     } 
     
     /* Exclude the AI Performance Predictor section from the blur */
+    #quantum-analyzer,
+    #quantum-analyzer *,
     #code-checker,
     #code-checker *,
     #csharp-learning,
@@ -1904,6 +1906,7 @@ body {
 
     
     /* Make sure the AI section appears above the blur layer */
+    #quantum-analyzer,
     #code-checker,
     #csharp-learning,
     #webinars,
@@ -2174,7 +2177,22 @@ body {
             position: relative;
             overflow: hidden;
         }
-        
+        .quantum-analyser {
+    display: flex;
+    flex-direction: column;
+    height: 500px; /* or use min-height for flexibility */
+}
+
+
+.quantum-editor-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.quantum-button-container {
+    padding-top: 15px;
+    /* Additional button container styles if needed */
+}
         .btn-neon:hover {
             color: #fff;
             box-shadow: 0 0 20px rgba(0, 255, 252, 0.6);
@@ -2476,7 +2494,24 @@ body {
             display: flex;
             gap: 1rem;
         }
+        .quantum-analyser-wrapper {
+    height: 600px; /* Fixed height for the entire component */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* For absolute positioning if needed */
+}
 
+.quantum-scrollable-content {
+    flex: 1; /* Takes all available space */
+    overflow-y: auto; /* Scrollable content */
+    min-height: 0; /* Important for flex children */
+}
+
+.quantum-button-container {
+    padding: 15px 0;
+    background: transparent;
+    /* Add any other button container styles */
+}
         .holo-btn {
             background: rgba(0, 255, 252, 0.1);
             border: 1px solid var(--neon-blue);
@@ -3532,6 +3567,10 @@ body {
         transform: translateY(0);
     }
 }
+.quantum-analyser {
+    max-height: 600px;
+    overflow-y: auto;
+}
 
 .error-item {
     animation: fadeInUp 0.4s ease forwards;
@@ -3731,6 +3770,17 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+.quantum-analyser {
+    height: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.quantum-editor-container {
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 .error-item {
@@ -4638,37 +4688,42 @@ code-context {
         <div class="container">
             <h2 class="section-title text-center mb-5">Quantum <span class="glow" style="color: var(--neon-blue);">C# Analyzer</span></h2>
             
-            <div class="quantum-analyser">
-                <!-- Holographic Interface -->
+            <div class="quantum-analyser-wrapper" style="height: 600px; display: flex; flex-direction: column;">
+                <!-- Header (fixed height) -->
                 <div class="quantum-header">
                     <div class="neural-pulse"></div>
                     <h2 class="cyber-glitch" data-text="⚡ C# Quantum Analyzer">⚡ C# Quantum Analyzer</h2>
                     <div class="particle-stream"></div>
                 </div>
-
-                <!-- Dynamic Code Interface -->
-                <div class="quantum-editor-container">
-                    <div class="editor-line-numbers" id="quantumLineNumbers"></div>
-                    <textarea id="quantumCodeInput" placeholder="// Enter your C# code here...
-// The quantum analyzer will detect issues and suggest improvements...
-public class Program
-{
-    public static void Main()
+    
+                <!-- Scrollable Content Area -->
+                <div class="quantum-scrollable-content" style="flex: 1; overflow-y: auto;">
+                    <!-- Editor Container -->
+                    <div class="quantum-editor-container">
+                        <div class="editor-line-numbers" id="quantumLineNumbers"></div>
+                        <textarea id="quantumCodeInput" placeholder="// Enter your C# code here...
+    // The quantum analyzer will detect issues and suggest improvements...
+    public class Program
     {
-        Console.WriteLine(\"Hello Quantum World!\");
-    }
-}" oninput="updateQuantumLineNumbers()" onscroll="syncQuantumScroll()"></textarea>
-                    <div class="quantum-particles"></div>
+        public static void Main()
+        {
+            Console.WriteLine(\"Hello Quantum World!\");
+        }
+    }" oninput="updateQuantumLineNumbers()" onscroll="syncQuantumScroll()"></textarea>
+                        <div class="quantum-particles"></div>
+                    </div>
                 </div>
                 
-                <button class="quantum-trigger" onclick="initiateQuantumAnalysis()">
-                    <span class="quantum-core"></span>
-                    <span class="energy-pulse">Initiate Quantum Analysis</span>
-                </button>
+                <!-- Button Container (always visible) -->
+                <div class="quantum-button-container" style="padding: 15px 0; background: transparent;">
+                    <button class="quantum-trigger" onclick="initiateQuantumAnalysis()">
+                        <span class="quantum-core"></span>
+                        <span class="energy-pulse">Initiate Quantum Analysis</span>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
-
     <!-- Error Modal -->
    <!-- Update your existing modal HTML with this structure -->
    <div id="errorModal" class="quantum-modal">
